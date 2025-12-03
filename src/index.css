@@ -1,96 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Moroccan Food Marketplace Design System */
+    --background: 33 100% 96%; /* #FFF7ED warm cream */
+    --foreground: 18 35% 12%; /* #2B1B14 dark brown */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 30 38% 93%; /* #F7EFE6 */
+    --card-foreground: 18 35% 12%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 30 38% 93%;
+    --popover-foreground: 18 35% 12%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Harissa Orange - Primary CTA */
+    --primary: 13 75% 54%; /* #E4572E */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Moroccan Green - Secondary */
+    --secondary: 162 71% 24%; /* #12664F */
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted surfaces */
+    --muted: 30 38% 93%;
+    --muted-foreground: 18 20% 40%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent - Saffron Gold */
+    --accent: 33 87% 60%; /* #F2A341 */
+    --accent-foreground: 18 35% 12%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Majorelle Blue */
+    --majorelle: 209 77% 35%; /* #145C9E */
+    --majorelle-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --radius: 0.5rem;
+    --border: 30 30% 85%;
+    --input: 30 30% 85%;
+    --ring: 13 75% 54%;
 
-    --sidebar-background: 0 0% 98%;
+    --radius: 0.75rem;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    /* Badge Colors */
+    --badge-bronze: 24 50% 53%; /* #C57A4A */
+    --badge-silver: 213 12% 77%; /* #C0C5CE */
+    --badge-gold: 44 90% 62%; /* #F5C344 */
+    --badge-emerald: 161 61% 31%; /* #1E7F63 */
 
-    --sidebar-primary: 240 5.9% 10%;
+    /* Custom shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(18 35% 12% / 0.08);
+    --shadow-card: 0 8px 30px -8px hsl(18 35% 12% / 0.12);
+    --shadow-elevated: 0 20px 50px -12px hsl(18 35% 12% / 0.15);
 
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Sidebar */
+    --sidebar-background: 30 38% 93%;
+    --sidebar-foreground: 18 35% 12%;
+    --sidebar-primary: 13 75% 54%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 162 71% 24%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 30 30% 85%;
+    --sidebar-ring: 13 75% 54%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 18 35% 8%;
+    --foreground: 33 100% 96%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 18 30% 12%;
+    --card-foreground: 33 100% 96%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 18 30% 12%;
+    --popover-foreground: 33 100% 96%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 13 75% 54%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 162 71% 24%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 18 25% 18%;
+    --muted-foreground: 30 20% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 33 87% 60%;
+    --accent-foreground: 18 35% 12%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --border: 18 25% 20%;
+    --input: 18 25% 20%;
+    --ring: 13 75% 54%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 18 30% 12%;
+    --sidebar-foreground: 33 100% 96%;
   }
 }
 
@@ -100,6 +104,145 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+  /* Moroccan Pattern Overlay */
+  .moroccan-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L60 30L30 60L0 30z' fill='none' stroke='%23E4572E' stroke-width='0.5' opacity='0.05'/%3E%3C/svg%3E");
+    background-size: 30px 30px;
+  }
+
+  .zellige-border {
+    border-image: repeating-linear-gradient(
+      45deg,
+      hsl(var(--primary)) 0px,
+      hsl(var(--primary)) 2px,
+      transparent 2px,
+      transparent 8px
+    ) 1;
+  }
+
+  /* Button variants */
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300;
+    @apply shadow-md hover:shadow-lg hover:-translate-y-0.5;
+  }
+
+  .btn-secondary {
+    @apply border-2 border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground transition-all duration-300;
+  }
+
+  .btn-ghost {
+    @apply text-foreground/70 hover:text-foreground hover:bg-card transition-all duration-200;
+  }
+
+  /* Card styles */
+  .card-dish {
+    @apply bg-card rounded-2xl overflow-hidden transition-all duration-300;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .card-dish:hover {
+    box-shadow: var(--shadow-elevated);
+    @apply -translate-y-1;
+  }
+
+  /* Chef badge styles */
+  .badge-bronze {
+    @apply bg-[hsl(var(--badge-bronze))] text-white;
+  }
+
+  .badge-silver {
+    @apply bg-[hsl(var(--badge-silver))] text-foreground;
+  }
+
+  .badge-gold {
+    @apply bg-[hsl(var(--badge-gold))] text-foreground;
+  }
+
+  .badge-emerald {
+    @apply bg-[hsl(var(--badge-emerald))] text-white;
+  }
+
+  /* Gradient backgrounds */
+  .gradient-hero {
+    background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(30 50% 94%) 100%);
+  }
+
+  .gradient-warm {
+    background: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--card)) 100%);
+  }
+
+  /* Text gradient */
+  .text-gradient-primary {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 100%);
+  }
+
+  /* Animations */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  @keyframes slide-up {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-soft {
+    animation: pulse-soft 2s ease-in-out infinite;
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.6s ease-out forwards;
+  }
+
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+
+  .animation-delay-600 {
+    animation-delay: 600ms;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.5);
 }
