@@ -6,6 +6,12 @@ import { CitySelector } from "@/components/CitySelector";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useDishes, useCategories } from "@/hooks/useDishes";
+import { useAddToCart } from "@/hooks/useCart";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import { 
   Search, 
   SlidersHorizontal, 
@@ -17,14 +23,14 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const categories = [
-  { id: "all", label: "Tous", labelAr: "الكل" },
-  { id: "tajine", label: "Tajines", labelAr: "طاجين" },
-  { id: "couscous", label: "Couscous", labelAr: "كسكس" },
-  { id: "pastilla", label: "Pastilla", labelAr: "بسطيلة" },
-  { id: "harira", label: "Soupes", labelAr: "شوربة" },
-  { id: "grills", label: "Grillades", labelAr: "مشاوي" },
-  { id: "desserts", label: "Desserts", labelAr: "حلويات" },
+const defaultCategories = [
+  { id: "all", slug: "all", name: "Tous", name_ar: "الكل" },
+  { id: "tajine", slug: "tajine", name: "Tajines", name_ar: "طاجين" },
+  { id: "couscous", slug: "couscous", name: "Couscous", name_ar: "كسكس" },
+  { id: "pastilla", slug: "pastilla", name: "Pastilla", name_ar: "بسطيلة" },
+  { id: "harira", slug: "harira", name: "Soupes", name_ar: "شوربة" },
+  { id: "grills", slug: "grills", name: "Grillades", name_ar: "مشاوي" },
+  { id: "desserts", slug: "desserts", name: "Desserts", name_ar: "حلويات" },
 ];
 
 const filters = [
@@ -34,96 +40,145 @@ const filters = [
   { id: "top-rated", label: "Top rated", icon: Star },
 ];
 
-const dishes = [
+// Fallback mock data for when database is empty
+const mockDishes = [
   {
-    image: "https://images.unsplash.com/photo-1541518763669-27fef04b14ea?w=600&h=450&fit=crop",
+    id: "1",
+    photos: ["https://images.unsplash.com/photo-1541518763669-27fef04b14ea?w=600&h=450&fit=crop"],
     name: "Tajine Poulet Citron",
-    nameAr: "طاجين الدجاج بالحامض",
+    name_ar: "طاجين الدجاج بالحامض",
     description: "Tajine de poulet aux olives et citrons confits, préparé selon la recette traditionnelle de Fès.",
     price: 85,
+    average_rating: 4.9,
+    total_reviews: 156,
+    preparation_time: 40,
+    chef_id: "1",
     chef: {
-      name: "Fatima Zahra",
-      avatar: "https://images.unsplash.com/photo-1595475207225-428b62bda831?w=100&h=100&fit=crop",
+      id: "1",
       badge: "emerald" as const,
-    },
-    rating: 4.9,
-    reviewCount: 156,
-    deliveryTime: "35-45 min",
+      average_rating: 4.9,
+      user_id: "1",
+      profile: {
+        full_name: "Fatima Zahra",
+        avatar_url: "https://images.unsplash.com/photo-1595475207225-428b62bda831?w=100&h=100&fit=crop",
+        city: "Casablanca"
+      }
+    }
   },
   {
-    image: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&h=450&fit=crop",
+    id: "2",
+    photos: ["https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&h=450&fit=crop"],
     name: "Couscous Royal",
-    nameAr: "كسكس ملكي",
+    name_ar: "كسكس ملكي",
     description: "Couscous aux sept légumes avec agneau, poulet et merguez maison.",
     price: 120,
+    average_rating: 4.8,
+    total_reviews: 98,
+    preparation_time: 50,
+    chef_id: "2",
     chef: {
-      name: "Khadija Benali",
-      avatar: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?w=100&h=100&fit=crop",
+      id: "2",
       badge: "gold" as const,
-    },
-    rating: 4.8,
-    reviewCount: 98,
-    deliveryTime: "40-50 min",
+      average_rating: 4.8,
+      user_id: "2",
+      profile: {
+        full_name: "Khadija Benali",
+        avatar_url: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?w=100&h=100&fit=crop",
+        city: "Rabat"
+      }
+    }
   },
   {
-    image: "https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?w=600&h=450&fit=crop",
+    id: "3",
+    photos: ["https://images.unsplash.com/photo-1511690656952-34342bb7c2f2?w=600&h=450&fit=crop"],
     name: "Pastilla au Poulet",
-    nameAr: "بسطيلة الدجاج",
+    name_ar: "بسطيلة الدجاج",
     description: "Pastilla feuilletée au poulet et amandes, saupoudrée de sucre glace et cannelle.",
     price: 95,
+    average_rating: 4.8,
+    total_reviews: 72,
+    preparation_time: 35,
+    chef_id: "3",
     chef: {
-      name: "Aicha El Mansouri",
-      avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop",
+      id: "3",
       badge: "gold" as const,
-    },
-    rating: 4.8,
-    reviewCount: 72,
-    deliveryTime: "30-40 min",
+      average_rating: 4.8,
+      user_id: "3",
+      profile: {
+        full_name: "Aicha El Mansouri",
+        avatar_url: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&h=100&fit=crop",
+        city: "Marrakech"
+      }
+    }
   },
   {
-    image: "https://images.unsplash.com/photo-1547592180-85f173990554?w=600&h=450&fit=crop",
+    id: "4",
+    photos: ["https://images.unsplash.com/photo-1547592180-85f173990554?w=600&h=450&fit=crop"],
     name: "Rfissa Traditionnelle",
-    nameAr: "رفيسة تقليدية",
+    name_ar: "رفيسة تقليدية",
     description: "Rfissa au poulet fermier et lentilles, servie sur msemen fait maison.",
     price: 90,
+    average_rating: 4.7,
+    total_reviews: 45,
+    preparation_time: 55,
+    chef_id: "4",
     chef: {
-      name: "Naima Chraibi",
-      avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop",
+      id: "4",
       badge: "silver" as const,
-    },
-    rating: 4.7,
-    reviewCount: 45,
-    deliveryTime: "45-55 min",
+      average_rating: 4.7,
+      user_id: "4",
+      profile: {
+        full_name: "Naima Chraibi",
+        avatar_url: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop",
+        city: "Fès"
+      }
+    }
   },
   {
-    image: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=600&h=450&fit=crop",
+    id: "5",
+    photos: ["https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=600&h=450&fit=crop"],
     name: "Harira Fassi",
-    nameAr: "حريرة فاسية",
+    name_ar: "حريرة فاسية",
     description: "Soupe traditionnelle aux tomates, lentilles et pois chiches. Parfaite pour le ftour.",
     price: 35,
+    average_rating: 4.9,
+    total_reviews: 203,
+    preparation_time: 25,
+    chef_id: "1",
     chef: {
-      name: "Fatima Zahra",
-      avatar: "https://images.unsplash.com/photo-1595475207225-428b62bda831?w=100&h=100&fit=crop",
+      id: "1",
       badge: "emerald" as const,
-    },
-    rating: 4.9,
-    reviewCount: 203,
-    deliveryTime: "20-30 min",
+      average_rating: 4.9,
+      user_id: "1",
+      profile: {
+        full_name: "Fatima Zahra",
+        avatar_url: "https://images.unsplash.com/photo-1595475207225-428b62bda831?w=100&h=100&fit=crop",
+        city: "Casablanca"
+      }
+    }
   },
   {
-    image: "https://images.unsplash.com/photo-1529042410759-befb1204b468?w=600&h=450&fit=crop",
+    id: "6",
+    photos: ["https://images.unsplash.com/photo-1529042410759-befb1204b468?w=600&h=450&fit=crop"],
     name: "Tajine Kefta",
-    nameAr: "طاجين الكفتة",
+    name_ar: "طاجين الكفتة",
     description: "Boulettes de viande hachée épicées dans une sauce tomate aux œufs pochés.",
     price: 75,
+    average_rating: 4.8,
+    total_reviews: 134,
+    preparation_time: 35,
+    chef_id: "2",
     chef: {
-      name: "Khadija Benali",
-      avatar: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?w=100&h=100&fit=crop",
+      id: "2",
       badge: "gold" as const,
-    },
-    rating: 4.8,
-    reviewCount: 134,
-    deliveryTime: "30-40 min",
+      average_rating: 4.8,
+      user_id: "2",
+      profile: {
+        full_name: "Khadija Benali",
+        avatar_url: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?w=100&h=100&fit=crop",
+        city: "Rabat"
+      }
+    }
   },
 ];
 
@@ -131,6 +186,24 @@ export default function Discover() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+  
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const addToCart = useAddToCart();
+
+  const { data: dbCategories } = useCategories();
+  const { data: dishes, isLoading } = useDishes({
+    categorySlug: selectedCategory,
+    search: searchQuery || undefined,
+    isHealthy: activeFilters.includes('healthy') || undefined,
+  });
+
+  const categories = dbCategories && dbCategories.length > 0 
+    ? [{ id: "all", slug: "all", name: "Tous", name_ar: "الكل" }, ...dbCategories.map(c => ({ ...c, slug: c.slug }))]
+    : defaultCategories;
+
+  // Use real data if available, otherwise use mock data
+  const displayDishes = dishes && dishes.length > 0 ? dishes : mockDishes;
 
   const toggleFilter = (filterId: string) => {
     setActiveFilters(prev => 
@@ -138,6 +211,15 @@ export default function Discover() {
         ? prev.filter(f => f !== filterId)
         : [...prev, filterId]
     );
+  };
+
+  const handleAddToCart = (dishId: string) => {
+    if (!user) {
+      toast.error('Connectez-vous pour ajouter au panier');
+      navigate('/auth');
+      return;
+    }
+    addToCart.mutate({ dishId });
   };
 
   return (
@@ -185,15 +267,15 @@ export default function Discover() {
               {categories.map((cat) => (
                 <button
                   key={cat.id}
-                  onClick={() => setSelectedCategory(cat.id)}
+                  onClick={() => setSelectedCategory(cat.slug)}
                   className={cn(
                     "px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all",
-                    selectedCategory === cat.id
+                    selectedCategory === cat.slug
                       ? "bg-primary text-primary-foreground"
                       : "bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
                   )}
                 >
-                  {cat.label}
+                  {cat.name}
                 </button>
               ))}
             </div>
@@ -249,16 +331,48 @@ export default function Discover() {
           {/* Results count */}
           <div className="flex items-center justify-between mb-6">
             <p className="text-sm text-muted-foreground">
-              <span className="font-semibold text-foreground">{dishes.length}</span> plats disponibles
+              <span className="font-semibold text-foreground">{displayDishes.length}</span> plats disponibles
             </p>
           </div>
 
           {/* Dish Grid */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {dishes.map((dish, index) => (
-              <DishCard key={`${dish.name}-${index}`} {...dish} />
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="rounded-2xl overflow-hidden">
+                  <Skeleton className="aspect-[4/3] w-full" />
+                  <div className="p-4 space-y-3">
+                    <Skeleton className="h-6 w-3/4" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-2/3" />
+                    <Skeleton className="h-10 w-full" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {displayDishes.map((dish) => (
+                <DishCard 
+                  key={dish.id}
+                  image={dish.photos?.[0] || '/placeholder.svg'}
+                  name={dish.name}
+                  nameAr={dish.name_ar || undefined}
+                  description={dish.description || ''}
+                  price={dish.price}
+                  chef={{
+                    name: dish.chef?.profile?.full_name || 'Chef',
+                    avatar: dish.chef?.profile?.avatar_url || '/placeholder.svg',
+                    badge: (dish.chef?.badge as any) || 'bronze',
+                  }}
+                  rating={dish.average_rating || 0}
+                  reviewCount={dish.total_reviews || 0}
+                  deliveryTime={`${dish.preparation_time || 30}-${(dish.preparation_time || 30) + 10} min`}
+                  onAddToCart={() => handleAddToCart(dish.id)}
+                />
+              ))}
+            </div>
+          )}
 
           {/* Load More */}
           <div className="flex justify-center mt-12">

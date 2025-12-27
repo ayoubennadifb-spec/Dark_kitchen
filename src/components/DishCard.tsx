@@ -18,6 +18,7 @@ interface DishCardProps {
   reviewCount: number;
   deliveryTime?: string;
   className?: string;
+  onAddToCart?: () => void;
 }
 
 export function DishCard({
@@ -31,6 +32,7 @@ export function DishCard({
   reviewCount,
   deliveryTime = "30-45 min",
   className,
+  onAddToCart,
 }: DishCardProps) {
   return (
     <div className={cn("card-dish group cursor-pointer", className)}>
@@ -95,7 +97,7 @@ export function DishCard({
         </div>
 
         {/* CTA */}
-        <Button variant="default" size="sm" className="w-full mt-2">
+        <Button variant="default" size="sm" className="w-full mt-2" onClick={onAddToCart}>
           <Plus className="h-4 w-4" />
           Ajouter au panier
         </Button>

@@ -11,6 +11,7 @@ export interface ChefWithProfile {
   total_reviews: number;
   total_orders: number;
   monthly_earnings: number;
+  commission_rate: number;
   status: string;
   profile?: {
     full_name: string | null;

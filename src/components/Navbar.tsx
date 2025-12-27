@@ -3,7 +3,9 @@ import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/hooks/useAuth";
+import { useCartTotal } from "@/hooks/useCart";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Badge } from "./ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +21,7 @@ import {
   Users,
   Trophy,
   ShoppingBag,
+  ShoppingCart,
   User,
   LogOut,
   LayoutDashboard,
@@ -37,6 +40,7 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const { user, signOut, isChef, isDriver } = useAuth();
+  const { itemCount } = useCartTotal();
 
   const getInitials = (name?: string | null) => {
     if (!name) return user?.email?.charAt(0).toUpperCase() || 'U';
@@ -77,6 +81,18 @@ export function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-3">
+            {/* Cart Button */}
+            <Button variant="ghost" size="sm" className="relative" asChild>
+              <Link to="/cart">
+                <ShoppingCart className="h-5 w-5" />
+                {itemCount > 0 && (
+                  <Badge className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center text-xs">
+                    {itemCount}
+                  </Badge>
+                )}
+              </Link>
+            </Button>
+            
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
