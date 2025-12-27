@@ -13,6 +13,8 @@ import BecomeDriver from "./pages/BecomeDriver";
 import Community from "./pages/Community";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
+import Cart from "./pages/Cart";
+import ChefDashboard from "./pages/chef/Dashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,9 +35,15 @@ const App = () => (
               <Route path="/community" element={<Community />} />
               <Route path="/competitions" element={<Community />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/cart" element={<Cart />} />
               <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/chef/dashboard" element={
+                <ProtectedRoute>
+                  <ChefDashboard />
                 </ProtectedRoute>
               } />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
