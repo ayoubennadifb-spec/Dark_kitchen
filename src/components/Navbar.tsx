@@ -2,6 +2,15 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 import {
   Menu,
   X,
@@ -11,6 +20,9 @@ import {
   Trophy,
   ShoppingBag,
   User,
+  LogOut,
+  LayoutDashboard,
+  Settings,
 } from "lucide-react";
 
 const navLinks = [
@@ -24,6 +36,12 @@ const navLinks = [
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { user, signOut, isChef, isDriver } = useAuth();
+
+  const getInitials = (name?: string | null) => {
+    if (!name) return user?.email?.charAt(0).toUpperCase() || 'U';
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  };
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
@@ -59,13 +77,70 @@ export function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-3">
-            <Button variant="ghost" size="sm">
-              <User className="h-4 w-4 mr-2" />
-              Connexion
-            </Button>
-            <Button variant="default" size="sm">
-              Inscription
-            </Button>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="gap-2">
+                    <Avatar className="h-7 w-7">
+                      <AvatarImage src={user.user_metadata?.avatar_url} />
+                      <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                        {getInitials(user.user_metadata?.full_name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="hidden xl:inline">
+                      {user.user_metadata?.full_name || 'Mon compte'}
+                    </span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem asChild>
+                    <Link to="/dashboard" className="cursor-pointer">
+                      <LayoutDashboard className="mr-2 h-4 w-4" />
+                      Tableau de bord
+                    </Link>
+                  </DropdownMenuItem>
+                  {isChef && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/chef/dashboard" className="cursor-pointer">
+                        <ChefHat className="mr-2 h-4 w-4" />
+                        Espace Chef
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  {isDriver && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/driver/dashboard" className="cursor-pointer">
+                        <Truck className="mr-2 h-4 w-4" />
+                        Espace Livreur
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile" className="cursor-pointer">
+                      <Settings className="mr-2 h-4 w-4" />
+                      Paramètres
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={signOut} className="cursor-pointer text-destructive">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Se déconnecter
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/auth">
+                    <User className="h-4 w-4 mr-2" />
+                    Connexion
+                  </Link>
+                </Button>
+                <Button variant="default" size="sm" asChild>
+                  <Link to="/auth">Inscription</Link>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -109,12 +184,31 @@ export function Navbar() {
             );
           })}
           <div className="flex gap-2 pt-4 border-t border-border mt-4">
-            <Button variant="outline" className="flex-1">
-              Connexion
-            </Button>
-            <Button variant="default" className="flex-1">
-              Inscription
-            </Button>
+            {user ? (
+              <>
+                <Button variant="outline" className="flex-1" asChild>
+                  <Link to="/dashboard" onClick={() => setIsOpen(false)}>
+                    Mon compte
+                  </Link>
+                </Button>
+                <Button variant="ghost" className="flex-1" onClick={() => { signOut(); setIsOpen(false); }}>
+                  Déconnexion
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="outline" className="flex-1" asChild>
+                  <Link to="/auth" onClick={() => setIsOpen(false)}>
+                    Connexion
+                  </Link>
+                </Button>
+                <Button variant="default" className="flex-1" asChild>
+                  <Link to="/auth" onClick={() => setIsOpen(false)}>
+                    Inscription
+                  </Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -124,12 +218,14 @@ export function Navbar() {
 
 export function MobileNavbar() {
   const location = useLocation();
+  const { user } = useAuth();
+  
   const mobileLinks = [
     { href: "/", label: "Accueil", icon: ShoppingBag },
     { href: "/discover", label: "Découvrir", icon: ChefHat },
     { href: "/community", label: "Communauté", icon: Users },
     { href: "/orders", label: "Commandes", icon: Truck },
-    { href: "/profile", label: "Profil", icon: User },
+    { href: user ? "/dashboard" : "/auth", label: user ? "Profil" : "Connexion", icon: User },
   ];
 
   return (
