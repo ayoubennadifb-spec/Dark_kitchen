@@ -14,7 +14,10 @@ import Community from "./pages/Community";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
+import Orders from "./pages/Orders";
 import ChefDashboard from "./pages/chef/Dashboard";
+import DriverDashboard from "./pages/driver/Dashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,16 +39,11 @@ const App = () => (
               <Route path="/competitions" element={<Community />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/cart" element={<Cart />} />
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              } />
-              <Route path="/chef/dashboard" element={
-                <ProtectedRoute>
-                  <ChefDashboard />
-                </ProtectedRoute>
-              } />
+              <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+              <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/chef/dashboard" element={<ProtectedRoute><ChefDashboard /></ProtectedRoute>} />
+              <Route path="/driver/dashboard" element={<ProtectedRoute><DriverDashboard /></ProtectedRoute>} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

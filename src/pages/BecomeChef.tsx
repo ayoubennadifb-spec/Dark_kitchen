@@ -2,6 +2,7 @@ import { Navbar, MobileNavbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { ChefBadge, BadgeProgress } from "@/components/ChefBadge";
+import { ChefApplicationForm } from "@/components/chef/ChefApplicationForm";
 import { 
   ChefHat, 
   Wallet, 
@@ -245,19 +246,19 @@ export default function BecomeChef() {
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="py-20 bg-primary">
-          <div className="container text-center">
-            <h2 className="font-display text-3xl lg:text-4xl font-bold text-primary-foreground mb-4">
-              Prêt à commencer ?
-            </h2>
-            <p className="text-primary-foreground/80 mb-8 max-w-lg mx-auto">
-              L'inscription est gratuite et ne prend que 5 minutes. Rejoignez la communauté des chefs DarFood dès aujourd'hui.
-            </p>
-            <Button variant="accent" size="xl">
-              Créer mon compte chef
-              <ArrowRight className="h-5 w-5" />
-            </Button>
+        {/* Application Form */}
+        <section className="py-20 bg-primary" id="apply">
+          <div className="container">
+            <div className="text-center mb-12">
+              <h2 className="font-display text-3xl lg:text-4xl font-bold text-primary-foreground mb-4">
+                Prêt à commencer ?
+              </h2>
+              <p className="text-primary-foreground/80 max-w-lg mx-auto">
+                L'inscription est gratuite et ne prend que 5 minutes.
+              </p>
+            </div>
+            
+            <ChefApplicationForm />
           </div>
         </section>
       </main>
