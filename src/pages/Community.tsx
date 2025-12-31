@@ -16,6 +16,9 @@ import {
   Lock
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const tabs = [
   { id: "discussions", label: "Discussions", icon: MessageSquare },
@@ -119,6 +122,44 @@ const competitions = [
 
 export default function Community() {
   const [activeTab, setActiveTab] = useState("discussions");
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleNewDiscussion = () => {
+    if (!user) {
+      toast.error('Connectez-vous pour créer une discussion');
+      navigate('/auth');
+      return;
+    }
+    toast.info('Fonctionnalité de création de discussion bientôt disponible !');
+  };
+
+  const handleShareRecipe = () => {
+    if (!user) {
+      toast.error('Connectez-vous pour partager une recette');
+      navigate('/auth');
+      return;
+    }
+    toast.info('Fonctionnalité de partage de recette bientôt disponible !');
+  };
+
+  const handleSubscribeNotifications = () => {
+    if (!user) {
+      toast.error('Connectez-vous pour vous abonner aux notifications');
+      navigate('/auth');
+      return;
+    }
+    toast.success('Vous serez notifié des prochains événements !');
+  };
+
+  const handleParticipate = (competitionTitle: string) => {
+    if (!user) {
+      toast.error('Connectez-vous pour participer');
+      navigate('/auth');
+      return;
+    }
+    toast.success(`Inscription à "${competitionTitle}" en cours !`);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -167,7 +208,7 @@ export default function Community() {
             <div className="space-y-4">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="font-display text-xl font-semibold text-foreground">Discussions récentes</h2>
-                <Button variant="default" size="sm">Nouvelle discussion</Button>
+                <Button variant="default" size="sm" onClick={handleNewDiscussion}>Nouvelle discussion</Button>
               </div>
               
               {discussions.map((discussion) => (
@@ -207,7 +248,7 @@ export default function Community() {
             <div>
               <div className="flex items-center justify-between mb-6">
                 <h2 className="font-display text-xl font-semibold text-foreground">Recettes de la communauté</h2>
-                <Button variant="default" size="sm">Partager une recette</Button>
+                <Button variant="default" size="sm" onClick={handleShareRecipe}>Partager une recette</Button>
               </div>
               
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -283,7 +324,11 @@ export default function Community() {
                           <Trophy className="h-5 w-5 text-accent" />
                           <span className="font-semibold text-foreground">{competition.prize}</span>
                         </div>
-                        <Button variant={competition.status === "En cours" ? "default" : "outline"} size="sm">
+                        <Button 
+                          variant={competition.status === "En cours" ? "default" : "outline"} 
+                          size="sm"
+                          onClick={() => handleParticipate(competition.title)}
+                        >
                           {competition.status === "En cours" ? "Participer" : "Voir détails"}
                         </Button>
                       </div>
@@ -300,7 +345,7 @@ export default function Community() {
               <Calendar className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
               <h3 className="font-display text-xl font-semibold text-foreground mb-2">Événements à venir</h3>
               <p className="text-muted-foreground mb-6">Aucun événement prévu pour le moment.</p>
-              <Button variant="outline">S'abonner aux notifications</Button>
+              <Button variant="outline" onClick={handleSubscribeNotifications}>S'abonner aux notifications</Button>
             </div>
           )}
         </div>

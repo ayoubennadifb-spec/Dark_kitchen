@@ -1,7 +1,7 @@
 import { ChefCard } from "@/components/ChefCard";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-
+import { Link } from "react-router-dom";
 const featuredChefs = [
   {
     avatar: "https://images.unsplash.com/photo-1595475207225-428b62bda831?w=400&h=400&fit=crop",
@@ -59,9 +59,11 @@ export function FeaturedChefsSection() {
               أفضل الطباخين تقييماً
             </p>
           </div>
-          <Button variant="ghost" className="self-start sm:self-auto">
-            Voir tous les chefs
-            <ArrowRight className="h-4 w-4" />
+          <Button variant="ghost" className="self-start sm:self-auto" asChild>
+            <Link to="/discover">
+              Voir tous les chefs
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </Button>
         </div>
 
