@@ -1,5 +1,7 @@
 import { Navbar, MobileNavbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { Link } from "react-router-dom";
+import { DriverApplicationForm } from "@/components/driver/DriverApplicationForm";
 import { Button } from "@/components/ui/button";
 import { 
   Truck, 
@@ -99,12 +101,16 @@ export default function BecomeDriver() {
                 </p>
 
                 <div className="flex flex-wrap gap-4">
-                  <Button variant="hero" size="xl">
-                    Devenir livreur
-                    <ArrowRight className="h-5 w-5" />
+                  <Button variant="hero" size="xl" asChild>
+                    <a href="#apply">
+                      Devenir livreur
+                      <ArrowRight className="h-5 w-5" />
+                    </a>
                   </Button>
-                  <Button variant="hero-outline" size="xl">
-                    En savoir plus
+                  <Button variant="hero-outline" size="xl" asChild>
+                    <Link to="/discover">
+                      En savoir plus
+                    </Link>
                   </Button>
                 </div>
 
@@ -263,19 +269,19 @@ export default function BecomeDriver() {
           </div>
         </section>
 
-        {/* CTA */}
-        <section className="py-20 bg-primary">
-          <div className="container text-center">
-            <h2 className="font-display text-3xl lg:text-4xl font-bold text-primary-foreground mb-4">
-              Prêt à rouler avec nous ?
-            </h2>
-            <p className="text-primary-foreground/80 mb-8 max-w-lg mx-auto">
-              L'inscription est gratuite. Commencez à gagner de l'argent dès demain !
-            </p>
-            <Button variant="accent" size="xl">
-              S'inscrire maintenant
-              <ArrowRight className="h-5 w-5" />
-            </Button>
+        {/* Application Form */}
+        <section className="py-20 bg-primary" id="apply">
+          <div className="container">
+            <div className="text-center mb-12">
+              <h2 className="font-display text-3xl lg:text-4xl font-bold text-primary-foreground mb-4">
+                Prêt à rouler avec nous ?
+              </h2>
+              <p className="text-primary-foreground/80 max-w-lg mx-auto">
+                L'inscription est gratuite. Commencez à gagner de l'argent dès demain !
+              </p>
+            </div>
+            
+            <DriverApplicationForm />
           </div>
         </section>
       </main>
