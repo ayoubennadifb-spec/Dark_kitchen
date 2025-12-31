@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ChefHat, Truck, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function CTASection() {
   return (
@@ -42,9 +43,11 @@ export function CTASection() {
                 <span className="text-accent">✓</span> Support dédié
               </li>
             </ul>
-            <Button variant="accent" size="lg" className="w-full sm:w-auto">
-              Commencer comme chef
-              <ArrowRight className="h-4 w-4" />
+            <Button variant="accent" size="lg" className="w-full sm:w-auto" asChild>
+              <Link to="/become-chef">
+                Commencer comme chef
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </Button>
           </div>
 
@@ -81,9 +84,12 @@ export function CTASection() {
               variant="default" 
               size="lg" 
               className="w-full sm:w-auto"
+              asChild
             >
-              Devenir livreur partenaire
-              <ArrowRight className="h-4 w-4" />
+              <Link to="/become-driver">
+                Devenir livreur partenaire
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </Button>
           </div>
         </div>

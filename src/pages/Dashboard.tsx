@@ -1,4 +1,6 @@
 import { useAuth } from '@/hooks/useAuth';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 import { Navbar, MobileNavbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { Helmet } from 'react-helmet-async';
@@ -15,12 +17,34 @@ import {
   Truck,
   Clock,
   Star,
-  Package
+  Package,
+  ArrowRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
+const useUserOrders = () => {
+  const { user } = useAuth();
+  
+  return useQuery({
+    queryKey: ['user-orders', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('customer_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(5);
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!user,
+  });
+};
+
 const Dashboard = () => {
   const { user, signOut, isChef, isDriver } = useAuth();
+  const { data: orders } = useUserOrders();
 
   const getInitials = (name?: string | null) => {
     if (!name) return user?.email?.charAt(0).toUpperCase() || 'U';
@@ -84,19 +108,7 @@ const Dashboard = () => {
                     <Heart className="h-5 w-5 text-accent" />
                   </div>
                   <div>
-                    <p className="text-2xl font-bold">0</p>
-                    <p className="text-sm text-muted-foreground">Favoris</p>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardContent className="p-4 flex items-center gap-3">
-                  <div className="p-2 bg-secondary/20 rounded-lg">
-                    <Star className="h-5 w-5 text-secondary" />
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold">0</p>
+                    <p className="text-2xl font-bold">{orders?.length || 0}</p>
                     <p className="text-sm text-muted-foreground">Avis</p>
                   </div>
                 </CardContent>
@@ -115,6 +127,55 @@ const Dashboard = () => {
               </Card>
             </div>
 
+            {/* Role-specific Dashboards */}
+            {(isChef || isDriver) && (
+              <div className="grid md:grid-cols-2 gap-4 mb-8">
+                {isChef && (
+                  <Card className="border-secondary/30 bg-secondary/5">
+                    <CardContent className="p-6 flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 rounded-xl bg-secondary/10 flex items-center justify-center">
+                          <ChefHat className="h-6 w-6 text-secondary" />
+                        </div>
+                        <div>
+                          <p className="font-semibold">Espace Chef</p>
+                          <p className="text-sm text-muted-foreground">Gérez vos plats et commandes</p>
+                        </div>
+                      </div>
+                      <Button variant="secondary" asChild>
+                        <Link to="/chef/dashboard">
+                          Accéder
+                          <ArrowRight className="h-4 w-4 ml-2" />
+                        </Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                )}
+                
+                {isDriver && (
+                  <Card className="border-primary/30 bg-primary/5">
+                    <CardContent className="p-6 flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                          <Truck className="h-6 w-6 text-primary" />
+                        </div>
+                        <div>
+                          <p className="font-semibold">Espace Livreur</p>
+                          <p className="text-sm text-muted-foreground">Gérez vos livraisons</p>
+                        </div>
+                      </div>
+                      <Button variant="default" asChild>
+                        <Link to="/driver/dashboard">
+                          Accéder
+                          <ArrowRight className="h-4 w-4 ml-2" />
+                        </Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            )}
+
             {/* Quick Actions */}
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {/* Recent Orders */}
@@ -127,13 +188,47 @@ const Dashboard = () => {
                   <CardDescription>Vos dernières commandes</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-center py-8 text-muted-foreground">
-                    <ShoppingBag className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                    <p>Aucune commande pour le moment</p>
-                    <Button asChild className="mt-4">
-                      <Link to="/discover">Découvrir les plats</Link>
-                    </Button>
-                  </div>
+                  {orders && orders.length > 0 ? (
+                    <div className="space-y-4">
+                      {orders.slice(0, 3).map((order) => (
+                        <div key={order.id} className="flex items-center justify-between p-4 rounded-xl bg-muted/50">
+                          <div>
+                            <p className="font-semibold">{order.order_number}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {new Date(order.created_at || '').toLocaleDateString('fr-FR')}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <Badge variant={order.status === 'delivered' ? 'default' : 'secondary'}>
+                              {order.status === 'pending' && 'En attente'}
+                              {order.status === 'confirmed' && 'Confirmée'}
+                              {order.status === 'cooking' && 'En préparation'}
+                              {order.status === 'ready' && 'Prête'}
+                              {order.status === 'picked_up' && 'Récupérée'}
+                              {order.status === 'delivering' && 'En livraison'}
+                              {order.status === 'delivered' && 'Livrée'}
+                              {order.status === 'cancelled' && 'Annulée'}
+                            </Badge>
+                            <p className="text-sm font-medium mt-1">{order.total} DH</p>
+                          </div>
+                        </div>
+                      ))}
+                      <Button variant="ghost" className="w-full" asChild>
+                        <Link to="/orders">
+                          Voir toutes les commandes
+                          <ArrowRight className="h-4 w-4 ml-2" />
+                        </Link>
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <ShoppingBag className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                      <p>Aucune commande pour le moment</p>
+                      <Button asChild className="mt-4">
+                        <Link to="/discover">Découvrir les plats</Link>
+                      </Button>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
 
@@ -156,6 +251,12 @@ const Dashboard = () => {
                     <Link to="/addresses">
                       <MapPin className="mr-2 h-4 w-4" />
                       Mes adresses
+                    </Link>
+                  </Button>
+                  <Button variant="ghost" className="w-full justify-start" asChild>
+                    <Link to="/orders">
+                      <ShoppingBag className="mr-2 h-4 w-4" />
+                      Mes commandes
                     </Link>
                   </Button>
                   

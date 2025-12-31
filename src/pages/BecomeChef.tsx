@@ -1,6 +1,7 @@
 import { Navbar, MobileNavbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import { ChefBadge, BadgeProgress } from "@/components/ChefBadge";
 import { ChefApplicationForm } from "@/components/chef/ChefApplicationForm";
 import { 
@@ -96,12 +97,16 @@ export default function BecomeChef() {
               </p>
 
               <div className="flex flex-wrap gap-4">
-                <Button variant="hero" size="xl">
-                  Commencer maintenant
-                  <ArrowRight className="h-5 w-5" />
+                <Button variant="hero" size="xl" asChild>
+                  <a href="#apply">
+                    Commencer maintenant
+                    <ArrowRight className="h-5 w-5" />
+                  </a>
                 </Button>
-                <Button variant="hero-outline" size="xl">
-                  Voir comment ça marche
+                <Button variant="hero-outline" size="xl" asChild>
+                  <Link to="/discover">
+                    Voir comment ça marche
+                  </Link>
                 </Button>
               </div>
 

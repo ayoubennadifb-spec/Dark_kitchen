@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { CitySelector } from "@/components/CitySelector";
 import heroImage from "@/assets/hero-food.jpg";
 import { ChefHat, Truck, ShoppingBag } from "lucide-react";
+import { Link } from "react-router-dom";
 
 export function HeroSection() {
   return (
@@ -57,17 +58,23 @@ export function HeroSection() {
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap gap-4 pt-4 animate-slide-up animation-delay-600">
-            <Button variant="hero" size="xl">
-              <ShoppingBag className="h-5 w-5" />
-              Commander maintenant
+            <Button variant="hero" size="xl" asChild>
+              <Link to="/discover">
+                <ShoppingBag className="h-5 w-5" />
+                Commander maintenant
+              </Link>
             </Button>
-            <Button variant="hero-outline" size="xl">
-              <ChefHat className="h-5 w-5" />
-              Devenir chef
+            <Button variant="hero-outline" size="xl" asChild>
+              <Link to="/become-chef">
+                <ChefHat className="h-5 w-5" />
+                Devenir chef
+              </Link>
             </Button>
-            <Button variant="ghost" size="lg" className="text-muted-foreground">
-              <Truck className="h-5 w-5" />
-              Devenir livreur
+            <Button variant="ghost" size="lg" className="text-muted-foreground" asChild>
+              <Link to="/become-driver">
+                <Truck className="h-5 w-5" />
+                Devenir livreur
+              </Link>
             </Button>
           </div>
 
