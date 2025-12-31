@@ -3,6 +3,7 @@ import { Footer } from "@/components/Footer";
 import { Link } from "react-router-dom";
 import { DriverApplicationForm } from "@/components/driver/DriverApplicationForm";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import { 
   Truck, 
   Wallet, 
@@ -108,9 +109,9 @@ export default function BecomeDriver() {
                     </a>
                   </Button>
                   <Button variant="hero-outline" size="xl" asChild>
-                    <Link to="/discover">
+                    <a href="#benefits">
                       En savoir plus
-                    </Link>
+                    </a>
                   </Button>
                 </div>
 
@@ -164,8 +165,22 @@ export default function BecomeDriver() {
                       </div>
                     </div>
                     <div className="flex gap-2 mt-4">
-                      <Button variant="outline" size="sm" className="flex-1">Refuser</Button>
-                      <Button variant="default" size="sm" className="flex-1">Accepter</Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="flex-1"
+                        onClick={() => toast.info('Livraison refusée (démo)')}
+                      >
+                        Refuser
+                      </Button>
+                      <Button 
+                        variant="default" 
+                        size="sm" 
+                        className="flex-1"
+                        onClick={() => toast.success('Livraison acceptée ! (démo)')}
+                      >
+                        Accepter
+                      </Button>
                     </div>
                   </div>
 
@@ -202,7 +217,7 @@ export default function BecomeDriver() {
         </section>
 
         {/* Benefits */}
-        <section className="py-20">
+        <section className="py-20" id="benefits">
           <div className="container">
             <div className="text-center mb-12">
               <h2 className="font-display text-3xl font-bold text-foreground mb-4">

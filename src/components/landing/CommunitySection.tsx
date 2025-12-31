@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Users, Trophy, BookOpen, Calendar, ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const communityFeatures = [
   {
@@ -71,9 +72,11 @@ export function CommunitySection() {
               })}
             </div>
 
-            <Button variant="default" size="lg">
-              Rejoindre la communauté
-              <ArrowRight className="h-4 w-4" />
+            <Button variant="default" size="lg" asChild>
+              <Link to="/community">
+                Rejoindre la communauté
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </Button>
           </div>
 

@@ -59,10 +59,10 @@ export function HeroSection() {
           {/* CTA Buttons */}
           <div className="flex flex-wrap gap-4 pt-4 animate-slide-up animation-delay-600">
             <Button variant="hero" size="xl" asChild>
-              <Link to="/discover">
+              <a href="#how-it-works">
                 <ShoppingBag className="h-5 w-5" />
-                Commander maintenant
-              </Link>
+                Voir comment ça marche
+              </a>
             </Button>
             <Button variant="hero-outline" size="xl" asChild>
               <Link to="/become-chef">

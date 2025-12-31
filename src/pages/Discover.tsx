@@ -376,7 +376,11 @@ export default function Discover() {
 
           {/* Load More */}
           <div className="flex justify-center mt-12">
-            <Button variant="outline" size="lg">
+            <Button 
+              variant="outline" 
+              size="lg"
+              onClick={() => toast.info('Plus de plats arrivent bientôt !')}
+            >
               Charger plus de plats
             </Button>
           </div>
