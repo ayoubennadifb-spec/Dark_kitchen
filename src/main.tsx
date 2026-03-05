@@ -9,7 +9,7 @@ createRoot(document.getElementById("root")!).render(
     defaultTheme="light"
     storageKey="darfood-theme"
     themes={["light", "white", "dark"]}
-    value={{ light: "", white: "white", dark: "dark" }}
+    value={{ light: "light", white: "white", dark: "dark" }}
   >
     <App />
   </ThemeProvider>

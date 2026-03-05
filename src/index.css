@@ -5,7 +5,8 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
+  :root,
+  .light {
     /* Moroccan Food Marketplace Design System */
     --background: 33 100% 96%; /* #FFF7ED warm cream */
     --foreground: 18 35% 12%; /* #2B1B14 dark brown */
